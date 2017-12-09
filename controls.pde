@@ -1,18 +1,20 @@
 
 void keyPressed()
 {
-  // println("keyCode " + keyCode);
-  if (keyCode == 39) {
+  println("keyCode " + keyCode);
+
+
+  if (keyCode == 39) { //key right
     player.cue(player.position() + 1000);
     println("skipping 10 forward");
   }
 
-  if (keyCode == 37) {
+  if (keyCode == 37) { //key left
     player.cue(player.position() - 1000);
     println("skipping 10 backwards");
   }
 
-  if (keyCode == 32) {
+  if (keyCode == 32) { //space key
     if (player.isPlaying()) player.pause();
     else if (!madeLoop) {
       player.play();
@@ -21,23 +23,18 @@ void keyPressed()
       player.cue(loopIn);
       player.play();
     }
+    if (player.position() >= player.length()) {
+      player.rewind();
+      player.play();
+    }
   }
 
-  if (key == 'l') {
+  if (key == 'l') { // loop key
     madeLoop =! madeLoop;
   }
 
-  if (key == 'n') {
+  if (key == 'n') { // load new file
     selectNewFile();
-  }
-
-
-  // if the player is at the end of the file,
-  // we have to rewind it before telling it to play again
-  else if ( player.position() == player.length() )
-  {
-    player.rewind();
-    player.play();
   }
 }
 

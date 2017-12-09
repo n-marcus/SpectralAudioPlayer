@@ -25,22 +25,23 @@ int loopOutPixels;
 int waveformHeight = 400;
 boolean fileLoaded = false;
 boolean makingWaveForm = false;
+boolean spectrumMode = true;
 
 IntList draggedLoopPoints;
+float[][] spectra;
 
 String fileName;
 
 boolean errorOccured = false;
 
-void setup()
-{
-selectInput("Select a file to process:", "fileSelected");
-// loadNewFile("C:/Users/Nathan/Music/SoundsSamplesandSnippets/Boutiq 1/zingende kids afrika.wav");
-sampleAverage = new FloatList();
-draggedLoopPoints = new IntList(); //only make new intlist when we
-size(1024, 600, OPENGL);
-pixelDensity(2);
-minim = new Minim(this);
+void setup() {
+  selectInput("Select a file to process:", "fileSelected");
+  // loadNewFile("C:/Users/Nathan/Music/SoundsSamplesandSnippets/Boutiq 1/zingende kids afrika.wav");
+  sampleAverage = new FloatList();
+  draggedLoopPoints = new IntList(); //only make new intlist when we
+  size(1024, 600, OPENGL);
+  pixelDensity(2);
+  minim = new Minim(this);
 }
 
 void draw() {
@@ -72,8 +73,7 @@ void showPlayhead() {
   stroke(175);
   line(posX, 0, posX, waveformHeight); //display playhead
   fill(175);
-  text((player.position() / 1000.) + "s", posX + 5, 10); //display current secondss
-
+  text((player.position() / 1000.) + "s", posX + 5, 10); //display current seconds
 }
 
 

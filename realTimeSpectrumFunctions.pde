@@ -1,7 +1,7 @@
 FloatList spectrumAxisHz = new FloatList();
 FloatList spectrumAxisxPos = new FloatList();
 
-void initSpectrum() {
+void initRealTimeSpectrum() {
   for (int i = 0; i < fft.specSize(); i++) {
     if (i % 20 == 0) {
       spectrumAxisHz.append(fft.indexToFreq(i));

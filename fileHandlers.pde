@@ -12,9 +12,12 @@ void loadNewFile(String fileName) {
     sound = minim.loadSample(fileName);
     player = minim.loadFile(fileName);
     fft = new FFT(player.bufferSize(), player.sampleRate());
+    initRealTimeSpectrum();
     initSpectrum();
     fileLoaded = true;
+
     thread("makeWaveform");
+    // thread("initSpectrum");
     } catch (Exception e) {
       e.printStackTrace();
       println("something went wrong");
@@ -25,6 +28,7 @@ void loadNewFile(String fileName) {
   void fileSelected(File selection) {
     if (selection == null) {
       println("Window was closed or the user hit cancel.");
+      errorOccured = true;
       } else {
         println("User selected " + selection.getAbsolutePath());
         loadNewFile(selection.getAbsolutePath());
