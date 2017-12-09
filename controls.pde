@@ -1,6 +1,17 @@
 
 void keyPressed()
 {
+  // println("keyCode " + keyCode);
+  if (keyCode == 39) {
+    player.cue(player.position() + 1000);
+    println("skipping 10 forward");
+  }
+
+  if (keyCode == 37) {
+    player.cue(player.position() - 1000);
+    println("skipping 10 backwards");
+  }
+
   if (keyCode == 32) {
     if (player.isPlaying()) player.pause();
     else if (!madeLoop) {
@@ -33,7 +44,7 @@ void keyPressed()
 void setMousePos() {
   int mouseTime = xPos2Time(mouseX);
   println("mousePressed on " + mouseX + " mouseTime = " + mouseTime);
-  if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;‘’
+  if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;
   player.cue(mouseTime);
 
   println("playerpos = " + player.position());

@@ -30,6 +30,8 @@ IntList draggedLoopPoints;
 
 String fileName;
 
+boolean errorOccured = false;
+
 void setup()
 {
 selectInput("Select a file to process:", "fileSelected");
@@ -38,41 +40,31 @@ sampleAverage = new FloatList();
 draggedLoopPoints = new IntList(); //only make new intlist when we
 size(1024, 600, OPENGL);
 pixelDensity(2);
-
-
 minim = new Minim(this);
-
-
-
 }
 
-void draw()
-{
-background(20);
-smooth();
-textSize(42);
-fill(175);
-textAlign(CENTER);
-if (makingWaveForm) text("Generating waveform...", width / 2, height /2);
-if (!fileLoaded) text("Loading file...", width / 2, height /2);
-if (fileLoaded) {
-  fft.forward(player.mix);
-  showWaveform();
-  showGrid();
-  showPlayhead();
-  checkLoop(); //make sure player follows loop points
-  if (mousePressed && (mouseButton == LEFT)) setMousePos(); //if left mousebutton is pressed, change current playhead position
-  if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
-  translate(0, waveformHeight - 5); //move down to make a second window
-  if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
-  drawSpectrumAxis();
+void draw() {
+  background(20);
+  smooth();
+  textSize(42);
+  fill(175);
+  textAlign(CENTER);
+  if (errorOccured) text("An error occured :( ", width / 2 , height / 2);
+  if (makingWaveForm) text("Generating waveform...", width / 2, height /2);
+  if (!fileLoaded && !errorOccured) text("Loading file...", width / 2, height /2);
+  if (fileLoaded) {
+    fft.forward(player.mix);
+    showWaveform();
+    showGrid();
+    showPlayhead();
+    checkLoop(); //make sure player follows loop points
+    if (mousePressed && (mouseButton == LEFT)) setMousePos(); //if left mousebutton is pressed, change current playhead position
+    if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
+    translate(0, waveformHeight - 5); //move down to make a second window
+    if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
+    drawSpectrumAxis();
+  }
 }
-}
-
-
-
-
-
 
 void showPlayhead() {
   // draw a line to show where in the song playback is currently located
