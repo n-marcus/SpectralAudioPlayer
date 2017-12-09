@@ -11,7 +11,7 @@ AudioSample sound;
 
 float totalTime;
 float xWidth;
-int averageLenght = 16384 / 12;; //this determines the detail in the waveform
+int averageLenght = 16384 / 12; //this determines the detail in the waveform
 float pixelsPerSec;
 int secTextInterval;
 
@@ -69,63 +69,9 @@ if (fileLoaded) {
 }
 }
 
-void fileSelected(File selection) {
-if (selection == null) {
-  println("Window was closed or the user hit cancel.");
-  } else {
-    println("User selected " + selection.getAbsolutePath());
-    loadNewFile(selection.getAbsolutePath());
-  }
-}
-
-void selectNewFile() {
-  fileLoaded = false;
-  if (player != null) {
-    player.pause();
-  }
-  selectInput("Select a file to process:", "fileSelected");
-}
-
-void loadNewFile(String fileName) {
-  println("loading file: " + fileName);
-  sound = minim.loadSample(fileName);
-  player = minim.loadFile(fileName);
-  fft = new FFT(player.bufferSize(), player.sampleRate());
-  initSpectrum();
-  fileLoaded = true;
-  thread("makeWaveform");
-}
-
-void keyPressed()
-{
-  if (keyCode == 32) {
-    if (player.isPlaying()) player.pause();
-    else if (!madeLoop) {
-      player.play();
-    }
-    else if (madeLoop) {
-      player.cue(loopIn);
-      player.play();
-    }
-  }
-
-  if (key == 'l') {
-    madeLoop =! madeLoop;
-  }
-
-  if (key == 'n') {
-    selectNewFile();
-  }
 
 
-  // if the player is at the end of the file,
-  // we have to rewind it before telling it to play again
-  else if ( player.position() == player.length() )
-  {
-    player.rewind();
-    player.play();
-  }
-}
+
 
 
 void showPlayhead() {
@@ -139,29 +85,8 @@ void showPlayhead() {
 }
 
 
-void setMousePos() {
-  int mouseTime = xPos2Time(mouseX);
-  println("mousePressed on " + mouseX + " mouseTime = " + mouseTime);
-  if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;
-  player.cue(mouseTime);
-
-  println("playerpos = " + player.position());
-}
-
-void mouseDragged() {
-  if (mouseButton == RIGHT) {
-    makeLoop();
-  }
-}
 
 int xPos2Time(int xPos) { //this function translates a point in x space to the time in the sample within the player object
   int time = int(map(xPos, 0, width, 0, player.length()));
   return time;
-}
-
-void mouseReleased() {
-  if (mouseButton == 39) {
-    mouseRightDragged = false;
-  }
-  println("released mousebutton " + mouseButton);
 }
