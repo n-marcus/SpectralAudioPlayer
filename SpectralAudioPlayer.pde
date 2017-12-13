@@ -57,8 +57,9 @@ void draw() {
   if (!fileLoaded && !errorOccured) text("Loading file...", width / 2, height /2);
   if (fileLoaded) {
     fft.forward(player.mix);
-    if (spectrumMode) {
-      spec.drawSpectrum(width, waveformHeight, 0., 1.);
+    if (spectrumMode ) {
+      if (mousePressed && keyPressed && keyCode == 17)  spec.drawSpectrum(width, waveformHeight - bord,  (float(mouseX - 100) / float(width)), (float(waveformHeight - mouseY - 20) / float(waveformHeight)));
+      else spec.update();
     }
     else showWaveform();
     showGrid();
