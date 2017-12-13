@@ -42,7 +42,7 @@ class Spectrum {
             nextYPos = displayY - getYPos(j + 1);
           }
           float brightness = map(spectra[i][j], 0.0, 35., 0., 300.);
-
+          
           //draw actual points
           //point(xPos, yPos);
           stroke(brightness);
