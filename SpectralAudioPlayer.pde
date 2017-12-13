@@ -59,6 +59,7 @@ void draw() {
     fft.forward(player.mix);
     if (spectrumMode) {
       spec.drawSpectrum(width, waveformHeight, 0., 1.);
+    }
     else showWaveform();
     showGrid();
     showPlayhead();
