@@ -9,6 +9,8 @@ FloatList sampleAverage;
 int bord = 10;
 AudioSample sound;
 
+Spectrum spec;
+
 float totalTime;
 float xWidth;
 int averageLenght = 16384 / 12; //this determines the detail in the waveform
@@ -25,7 +27,7 @@ int loopOutPixels;
 int waveformHeight = 400;
 boolean fileLoaded = false;
 boolean makingWaveForm = false;
-boolean spectrumMode = true;
+boolean spectrumMode = false;
 
 IntList draggedLoopPoints;
 float[][] spectra;
@@ -55,7 +57,9 @@ void draw() {
   if (!fileLoaded && !errorOccured) text("Loading file...", width / 2, height /2);
   if (fileLoaded) {
     fft.forward(player.mix);
-    showWaveform();
+    if (spectrumMode) {
+      spec.drawSpectrum(width, waveformHeight, 0., 1.);
+    else showWaveform();
     showGrid();
     showPlayhead();
     checkLoop(); //make sure player follows loop points

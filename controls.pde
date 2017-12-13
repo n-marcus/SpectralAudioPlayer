@@ -2,7 +2,9 @@
 void keyPressed()
 {
   println("keyCode " + keyCode);
-
+  if (keyCode == 9) {
+    spectrumMode =! spectrumMode;
+  }
 
   if (keyCode == 39) { //key right
     player.cue(player.position() + 1000);
