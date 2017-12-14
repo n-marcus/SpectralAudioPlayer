@@ -41,12 +41,18 @@ void keyPressed()
 }
 
 void setMousePos() {
-  int mouseTime = xPos2Time(mouseX);
-  println("mousePressed on " + mouseX + " mouseTime = " + mouseTime);
-  if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;
-  player.cue(mouseTime);
+  int mouseTime = 0;
+  if (!keyPressed) {
+    if (spectrumMode) {
+      mouseTime = spec.returnMouseTime();
+    }
+    // mouseTime = xPos2Time(mouseX);
+    println("mousePressed on " + mouseX + " mouseTime = " + mouseTime);
+    if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;
+    player.cue(mouseTime);
 
-  println("playerpos = " + player.position());
+    println("playerpos = " + player.position());
+  }
 }
 
 void mouseDragged() {

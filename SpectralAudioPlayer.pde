@@ -58,10 +58,12 @@ void draw() {
   if (fileLoaded) {
     fft.forward(player.mix);
     if (spectrumMode ) {
-      if (mousePressed && keyPressed && keyCode == 17)  spec.drawSpectrum(width, waveformHeight - bord,  (float(mouseX - 100) / float(width)), (float(waveformHeight - mouseY - 20) / float(waveformHeight)));
-      else spec.update();
+      if (mousePressed && keyPressed && keyCode == 17)  spec.updateSpectrum(width, waveformHeight - bord,  (float(mouseX - 100) / float(width)), (float(waveformHeight - mouseY - 20) / float(waveformHeight)));
+      else spec.drawSpectrum();
     }
-    else showWaveform();
+    else {
+      showWaveform();
+    }
     showGrid();
     showPlayhead();
     checkLoop(); //make sure player follows loop points

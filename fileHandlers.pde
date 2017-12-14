@@ -13,7 +13,7 @@ void loadNewFile(String fileName) {
     player = minim.loadFile(fileName);
     fft = new FFT(player.bufferSize(), player.sampleRate());
     initRealTimeSpectrum();
-    spec = new Spectrum(sound, 2048, width, waveformHeight);
+    spec = new Spectrum(sound, 2048, width , waveformHeight);
     fileLoaded = true;
 
     thread("makeWaveform");

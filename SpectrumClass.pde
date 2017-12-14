@@ -8,6 +8,7 @@ class Spectrum {
   int startChunk = 0;
   int endChunk = 1000;
   int numChunks = endChunk;
+  int totalChunks = 0;
   int _displayX;
   int _displayY;
   float _startPerc;
@@ -30,7 +31,7 @@ class Spectrum {
     this.displayY = displayY - barHeight; //we dont draw over the selection bar
   }
 
-  void update() {
+  void drawSpectrum() {
     float xPos = 0; //initialize x position
     for (int i = startChunk; i < startChunk + numChunks && i < spectra.length - 1; i += 1) { //as long as we are between the startChunk and endChunk and not over the lenght of available chunks
       xPos += pixelsPerChunk;// + (increment - 1); //move everything xScale  to the right
@@ -42,7 +43,7 @@ class Spectrum {
             nextYPos = displayY - getYPos(j + 1);
           }
           float brightness = map(spectra[i][j], 0.0, 35., 0., 300.);
-          
+
           //draw actual points
           //point(xPos, yPos);
           stroke(brightness);
@@ -55,8 +56,7 @@ class Spectrum {
   }
 
 
-  void drawSpectrum(int displayX, int displayY, float startPerc, float endPerc) { //displayY is height of display, displayX is width, startPerc is the percentage from where the display should start within the sample (0.0 - 1.0)
-
+  void updateSpectrum(int displayX, int displayY, float startPerc, float endPerc) { //displayY is height of display, displayX is width, startPerc is the percentage from where the display should start within the sample (0.0 - 1.0)
 
     if (_displayX != displayX || _displayY != displayY || _startPerc != startPerc || _endPerc != endPerc) { //check if input has changed, if not, no draw
       this.displayX = displayX;
@@ -89,7 +89,7 @@ class Spectrum {
       } else {
         if (debug) println("nothing changed");
       }
-      this.update();
+      this.drawSpectrum();
     }
 
 
@@ -101,6 +101,22 @@ class Spectrum {
 
       rectMode(CORNER);
       rect(barXPos, displayY - barHeight - (bord / 2), barLength, barHeight);
+    }
+
+    int returnMouseTime() {
+      float mousePerc = float(mouseX) / displayX;
+      int firstDisplayedSample = startChunk * fftSize;
+      int lastDisplayedSample = endChunk * fftSize;
+      int totalDisplayedSamples = lastDisplayedSample - firstDisplayedSample;
+      float mouseTime = round(mousePerc * totalDisplayedSamples + firstDisplayedSample);
+      mouseTime = (mouseTime / sample.sampleRate()) * 1000; //go from samples to seconds
+      mouseTime = constrain(mouseTime, 0, numChunks * fftSize);
+      if (debug) {
+        println("First displayed sample = " + firstDisplayedSample + " last displayed sample = " + lastDisplayedSample + " total displayed samples = " + totalDisplayedSamples);
+        println("mousePerc = " + mousePerc);
+        println("mouseTime = " + mouseTime);
+      }
+      return int(mouseTime);
     }
 
 
@@ -122,7 +138,7 @@ class Spectrum {
       FFT fft = new FFT( fftSize, sample.sampleRate() );
 
       // now we'll analyze the samples in chunks
-      int totalChunks = (leftChannel.length / fftSize) + 1;
+      totalChunks = (leftChannel.length / fftSize) + 1;
 
       // allocate a 2-dimentional array that will hold all of the spectrum data for all of the chunks.
       // the second dimension if fftSize/2 because the spectrum size is always half the number of samples analyzed.
