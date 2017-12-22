@@ -3,9 +3,9 @@ void keyPressed()
 {
   println("keyCode " + keyCode);
   if (keyCode == 9) {
-    spectrumMode =! spectrumMode;
+    display.switchDisplay();
   }
-
+  
   if (keyCode == 39) { //key right
     player.cue(player.position() + 1000);
     println("skipping 10 forward");
@@ -44,9 +44,10 @@ void setMousePos() {
   int mouseTime = 0;
   if (!keyPressed) {
     if (spectrumMode) {
-      mouseTime = spec.returnMouseTime();
+      mouseTime = spec.getAbsoluteTime(mouseX);
+    } else {
+      mouseTime = xPos2Time(mouseX);
     }
-    // mouseTime = xPos2Time(mouseX);
     println("mousePressed on " + mouseX + " mouseTime = " + mouseTime);
     if (mouseTime > loopIn && mouseTime > loopOut) madeLoop = false;
     player.cue(mouseTime);

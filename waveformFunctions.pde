@@ -58,16 +58,16 @@ void showWaveform() {
   }
 }
 
-void showGrid() {
-
-  for (int sec = 0; sec < totalTime; sec +=secTextInterval) {
-    float xPos = sec * pixelsPerSec;
-    stroke(200, 50);
-    line(xPos, 0, xPos, waveformHeight);
-    textSize(8);
-    fill(200);
-    text(sec + "s", xPos, waveformHeight - bord /2);
-  }
-  line(0, waveformHeight - bord * 2, width, waveformHeight - bord * 2);
-  line(0, waveformHeight, width, waveformHeight);
-}
+// void showGrid() {
+//
+//   for (int sec = 0; sec < totalTime; sec +=secTextInterval) {
+//     float xPos = sec * pixelsPerSec;
+//     stroke(200, 50);
+//     line(xPos, 0, xPos, waveformHeight);
+//     textSize(8);
+//     fill(200);
+//     text(sec + "s", xPos, waveformHeight - bord /2);
+//   }
+//   line(0, waveformHeight - bord * 2, width, waveformHeight - bord * 2);
+//   line(0, waveformHeight, width, waveformHeight);
+// }

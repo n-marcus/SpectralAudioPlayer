@@ -14,8 +14,9 @@ class Spectrum {
   float _startPerc;
   float _endPerc;
   float increment;
-  boolean debug = true;
+  boolean debug = false;
   int barHeight = 10;
+  float[][] spectra;
 
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
@@ -52,7 +53,7 @@ class Spectrum {
         }
       }
     }
-    drawSelectionBar(numChunks, startChunk);
+
   }
 
 
@@ -93,18 +94,10 @@ class Spectrum {
     }
 
 
-    void drawSelectionBar(int numChunks, int startChunk) {
-      fill(255, 100);
-      stroke(255);
-      float barLength = (float(numChunks) / float(spectra.length)) * displayX;
-      int barXPos = round(displayX * (float(startChunk) /float(spectra.length)));
 
-      rectMode(CORNER);
-      rect(barXPos, displayY - barHeight - (bord / 2), barLength, barHeight);
-    }
 
-    int returnMouseTime() {
-      float mousePerc = float(mouseX) / displayX;
+    int getAbsoluteTime(int xPos) {
+      float mousePerc = float(xPos) / displayX;
       int firstDisplayedSample = startChunk * fftSize;
       int lastDisplayedSample = endChunk * fftSize;
       int totalDisplayedSamples = lastDisplayedSample - firstDisplayedSample;

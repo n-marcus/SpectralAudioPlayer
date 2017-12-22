@@ -10,6 +10,7 @@ int bord = 10;
 AudioSample sound;
 
 Spectrum spec;
+Display display;
 
 float totalTime;
 float xWidth;
@@ -56,24 +57,21 @@ void draw() {
   if (makingWaveForm) text("Generating waveform...", width / 2, height /2);
   if (!fileLoaded && !errorOccured) text("Loading file...", width / 2, height /2);
   if (fileLoaded) {
-    fft.forward(player.mix);
-    if (spectrumMode ) {
-      if (mousePressed && keyPressed && keyCode == 17)  spec.updateSpectrum(width, waveformHeight - bord,  (float(mouseX - 100) / float(width)), (float(waveformHeight - mouseY - 20) / float(waveformHeight)));
-      else spec.drawSpectrum();
+      fft.forward(player.mix);
+      display.update();
+
+      // showGrid();
+      showPlayhead();
+      checkLoop(); //make sure player follows loop points
+      if (mousePressed && keyPressed && keyCode == 17) display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
+      if (mousePressed && (mouseButton == LEFT)) setMousePos(); //if left mousebutton is pressed, change current playhead position
+      if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
+      translate(0, waveformHeight - 5); //move down to make a second window
+      if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
+      drawSpectrumAxis();
     }
-    else {
-      showWaveform();
-    }
-    showGrid();
-    showPlayhead();
-    checkLoop(); //make sure player follows loop points
-    if (mousePressed && (mouseButton == LEFT)) setMousePos(); //if left mousebutton is pressed, change current playhead position
-    if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
-    translate(0, waveformHeight - 5); //move down to make a second window
-    if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
-    drawSpectrumAxis();
   }
-}
+
 
 void showPlayhead() {
   // draw a line to show where in the song playback is currently located
