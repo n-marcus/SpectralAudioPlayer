@@ -61,11 +61,11 @@ void draw() {
       display.update();
 
       // showGrid();
-      showPlayhead();
-      checkLoop(); //make sure player follows loop points
+      // showPlayhead();
+      display.drawPlayhead(player.position());
+      // checkLoop(); //make sure player follows loop points
       if (mousePressed && keyPressed && keyCode == 17) display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
-      if (mousePressed && (mouseButton == LEFT)) setMousePos(); //if left mousebutton is pressed, change current playhead position
-      if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
+      // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
       translate(0, waveformHeight - 5); //move down to make a second window
       if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
       drawSpectrumAxis();

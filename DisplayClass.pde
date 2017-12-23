@@ -53,11 +53,14 @@ class Display {
     rect(barXPos, displayY - barHeight, constrain(barLength + barXPos, barLength, displayX - 1), displayY);
   }
 
-  void drawPlayHead() {
-
-    float xPos =
-
-
+  void drawPlayhead(int pos) {
+    float pixelsPerMs = float(displayX) / float(displayedMs);
+    float offsetFromStart = pos - displayStart;
+    if (offsetFromStart >= 0) {
+      float xPos = offsetFromStart * pixelsPerMs;
+      stroke(255);
+      line(xPos, 0, xPos, waveformHeight);
+    }
   }
 
   void switchDisplay() {
@@ -95,7 +98,7 @@ class Display {
         if (xPos > 0 && xPos < displayX) {
           if (currentMs % 100 == 0 && msPerLine <= 100 && currentMs % 1000 != 0 && currentMs % 500 != 0 ) {
 
-            stroke(200, 100); //this is the color for the smallest interval
+            stroke(100, 100); //this is the color for the smallest interval
             textSize(8);
             if (displayedMs < 2000) text(currentMs / 1000. + "s", xPos + 20, displayY - (barHeight * 4));
           }
