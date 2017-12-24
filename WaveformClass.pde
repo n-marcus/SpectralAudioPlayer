@@ -9,7 +9,8 @@ class Waveform {
   int displayX;
   int displayY;
   float timePerChunk;
-  
+  float yScale = 1.;
+
   Waveform(AudioSample sample, int displayX, int displayY) {
     this.displayX = displayX;
     this.displayY = displayY;
@@ -67,11 +68,16 @@ class Waveform {
     for ( int i=0; i< sampleAverage.size() - 1; i++) {
       float xPos = i * widthPerChunk;
       float nextXPos = (i + 1) * widthPerChunk;
-      float yPos = sampleAverage.get(i);
-      float nextYPos = sampleAverage.get(i + 1);
+      float yPos = sampleAverage.get(i) * yScale;
+      float nextYPos = sampleAverage.get(i + 1) * yScale;
       int yOffset = displayY - 10;
       line(xPos, yOffset - yPos, nextXPos, yOffset - nextYPos);
       // line(i*xWidth, height-bord*2, i*xWidth, (height-bord*2) - sampleAverage.get(i));
     }
+  }
+
+  void setYScale(float _YScale) {
+    this.yScale = _YScale;
+    println("Set yScale to: " + yScale);
   }
 }

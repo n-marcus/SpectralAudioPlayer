@@ -12,6 +12,8 @@ void initRealTimeSpectrum() {
 
 void drawSpectrumAxis() {
   for (int i = 0; i < spectrumAxisHz.size(); i ++) {
+
+    textSize(10);
     text(spectrumAxisHz.get(i) + "Hz", spectrumAxisxPos.get(i), height - waveformHeight);
   }
 }
@@ -33,7 +35,8 @@ void drawSpectrum() {
     float endpointx = xPos;
     // float destination = (power * 200);
     int yOffset = height - waveformHeight + 100;
-
+    strokeWeight(0.5);
+    stroke(255);
     line(xPos, yOffset - map(currentBandPower, -3., 0., 40., 200.), nextXPos, yOffset - map(nextBandPower, -3., 0., 40., 200.) );
 
     // println("power = " + power);

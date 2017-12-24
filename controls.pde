@@ -38,12 +38,14 @@ void keyPressed()
   if (key == 'n') { // load new file
     selectNewFile();
   }
+  if (key == 'f') {
+    display.switchFollowPlayhead();
+  }
 }
-
 
 void mouseDragged() {
   if (mouseButton == RIGHT) {
-    makeLoop();
+    // makeLoop();
   }
 }
 

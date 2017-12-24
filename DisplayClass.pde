@@ -5,6 +5,7 @@ class Display {
   int displayEnd = 0; //end of display in ms
   int displayedMs = 0; //total displayed milliseconds
   int minMsDisplayed = 20; //minimal ms displayed (also most you can zoom in)
+  int positionInFile = 0;
 
   float startDisplayPerc = 0.; //percentage where the display starts within the sample
   float endDisplayPerc = 1.; //percentage where the display ends within the sample
@@ -18,6 +19,8 @@ class Display {
 
   boolean spectralDisplay = true; //toggle between waveform and spectrum
   boolean mouseOver = false;
+  boolean followPlayhead = false;
+  int followPlayheadOffset = 0;
 
   Display(AudioSample sample, int displayX, int displayY) {
     this.displayX = displayX;
@@ -35,12 +38,20 @@ class Display {
 
   void update() {
     if (spectralDisplay) {
+      if (followPlayhead) setAbsPos(positionInFile - followPlayheadOffset, displayedMs);
       spec.updateSpectrum(displayX, displayY, startDisplayPerc, endDisplayPerc);
-    } else {
+    } else if (!spectralDisplay){
       wave.updateWaveform();
     }
     drawSelectionBar();
     drawGrid();
+  }
+
+  void switchFollowPlayhead() {
+    followPlayhead = !followPlayhead;
+    followPlayheadOffset = positionInFile - displayStart;
+    println("follow playhead is " + followPlayhead);
+    println("followPlayheadOffset = " + followPlayheadOffset);
   }
 
   void drawSelectionBar() {
@@ -56,11 +67,17 @@ class Display {
   void drawPlayhead(int pos) {
     float pixelsPerMs = float(displayX) / float(displayedMs);
     float offsetFromStart = pos - displayStart;
+    positionInFile = pos;
     if (offsetFromStart >= 0) {
       float xPos = offsetFromStart * pixelsPerMs;
       stroke(255);
       line(xPos, 0, xPos, waveformHeight);
     }
+
+    //draw smaller playhead in selectionbar
+
+    float xPos = (float(pos) / float(totalTime)) * displayX;
+    line(xPos, displayY - barHeight, xPos, displayY);
   }
 
   void switchDisplay() {
@@ -69,8 +86,8 @@ class Display {
 
 
   void setPercPos(float percStart, float percLength) { //changes the start and end percentages within the loaded sample that should be displayed
-    displayStart = int(percStart * float(totalTime));
-    displayedMs = int(percLength * float(totalTime));
+    displayStart = int(percStart * float(totalTime)); //time of start in ms
+    displayedMs = int(percLength * float(totalTime)); //displayed ms in ms
     displayStart = constrain(displayStart, 0, totalTime - minMsDisplayed);
     displayedMs = constrain(displayedMs, minMsDisplayed, totalTime - displayStart);
 
@@ -78,6 +95,11 @@ class Display {
     endDisplayPerc = float(displayStart + displayedMs) / float(totalTime);
 
     //println("displayStart is now " + displayStart + " displayedMs is now " + displayedMs + " totalTime = " + totalTime);
+  }
+
+  void setAbsPos(int startPos, int displayedMs) {
+    startDisplayPerc = float(startPos) / float(totalTime); //calculate percentages from ms data
+    endDisplayPerc = float(startPos + displayedMs) / float(totalTime);
   }
 
   void drawGrid() {
@@ -128,5 +150,13 @@ class Display {
     } else {
     }
     return absoluteTime;
+  }
+
+  void setYScale(float _YScale) {
+    if (spectralDisplay) {
+      spec.setYScale(_YScale);
+    } else {
+      wave.setYScale(_YScale);
+    }
   }
 }

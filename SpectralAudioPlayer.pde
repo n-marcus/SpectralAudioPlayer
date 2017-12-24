@@ -53,6 +53,9 @@ void draw() {
   textSize(42);
   fill(175);
   textAlign(CENTER);
+  text(frameRate + "fps", 10, 10);
+
+
   if (errorOccured) text("An error occured :( ", width / 2 , height / 2);
   if (makingWaveForm) text("Generating waveform...", width / 2, height /2);
   if (!fileLoaded && !errorOccured) text("Loading file...", width / 2, height /2);
@@ -65,11 +68,15 @@ void draw() {
       display.drawPlayhead(player.position());
       // checkLoop(); //make sure player follows loop points
       if (mousePressed && keyPressed && keyCode == 17) display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
-      // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
+      if (mousePressed && keyPressed && keyCode == 16) display.setYScale((float(mouseX) * 2. )/ float(width));
+       // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
       translate(0, waveformHeight - 5); //move down to make a second window
       if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
       drawSpectrumAxis();
     }
+    textAlign(CORNER);
+    text(frameRate + "fps", 20, 20);
+
   }
 
 

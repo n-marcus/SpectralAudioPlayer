@@ -39,6 +39,7 @@ class Spectrum {
       for (int j = 0; j < spectra[i].length; j ++) {
         if (spectra[i][j] > 0.0) {
           float yPos = displayY - getYPos(j);
+          if (yPos > 0 && yPos > displayY && xPos > 0 && xPos < displayX) {}
           float nextYPos = 0.;
           if (j < spectra[i].length) {
             nextYPos = displayY - getYPos(j + 1);
@@ -53,8 +54,9 @@ class Spectrum {
         }
       }
     }
-
   }
+
+
 
 
   void updateSpectrum(int displayX, int displayY, float startPerc, float endPerc) { //displayY is height of display, displayX is width, startPerc is the percentage from where the display should start within the sample (0.0 - 1.0)
@@ -164,7 +166,7 @@ class Spectrum {
           fft.forward( fftSamples );
 
           // and copy the resulting spectrum into our spectra array
-          for (int i = 0; i < 512; ++i)
+          for (int i = 0; i < fftSize/2; ++i)
           {
             float power = fft.getBand(i);
             //if (power > 0.0) {
@@ -185,5 +187,11 @@ class Spectrum {
       float getYPos(int i) {
         float yPos = (sqrt(i *(yScale * width))) * 1.1;
         return yPos;
+      }
+
+      void setYScale(float _YScale) {
+        this.yScale = _YScale;
+        println("Set yScale to: " + this.yScale);
+
       }
     }
