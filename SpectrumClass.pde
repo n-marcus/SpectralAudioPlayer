@@ -183,11 +183,10 @@ class Spectrum {
           for (int i = 0; i < fftSize/2; ++i)
           {
             float power = fft.getBand(i);
-            //if (power > 0.0) {
-            power = 10 * log(power);
-            spectra[chunkIdx][i] = power;
-
-            //}
+            power = 10 * log(power) + 5.;
+            if (power > 0.0) {
+              spectra[chunkIdx][i] = power;
+            }
           }
         }
 

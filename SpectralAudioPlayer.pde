@@ -42,8 +42,24 @@ boolean errorOccured = false;
 boolean controlPressed = false;
 boolean shiftPressed = false;
 boolean loadingFile = false;
+boolean showHelp = false;
 
 FadingText helpText;
+String[] helpStrings = {
+  "Press space to pause / play loaded audio file",
+  "Click anywhere in the spectrum to move to that location within the file",
+  "Hold cntrl and press + or - to zoom in or out",
+  "Or hold cntrl and drag the mouse to zoom in or out",
+  "Press the right or left arrow key to move 5 seconds forward or backwards (hold cntrl for 1 second intervals)",
+  "Hold cntrl and shift and press + or - to adjust the overall gain of the spectogram",
+  "-----------",
+  "Press 'n' to load a new audio file",
+  "Press 'x' to exit the program",
+  "Press 'c' to center the view around the current playing position in the file",
+  "Press 'i' to show details on the spectogram",
+  "Press 'f' to follow the positon in the file",
+  "Press 'h' to hide this information"
+};
 
 void setup() {
   selectInput("Select a file to process:", "fileSelected");
@@ -57,6 +73,7 @@ void setup() {
   surface.setResizable(true);
 
   helpText = new FadingText(50 ,50 , 30000, "Press 'h' to for shortcuts and explanations");
+
 }
 
 void draw() {
@@ -86,8 +103,10 @@ void draw() {
   }
 
   if (fileLoaded) {
-      if (keyPressed && keyCode == 39) player.cue(player.position() + 5000); //skip forward five seconds
-      if (keyPressed && keyCode == 37) player.cue(player.position() -5000);
+    checkButtons();
+
+
+
       // if (keyPressed && keyCode == 61 && controlPressed) display.setGain(display.getGain() + 0.2);
       // if (keyPressed && )
 
@@ -122,6 +141,7 @@ void draw() {
 
 
     if (helpText.alive) helpText.update();
+    if (showHelp) showHelp();
   }
 
 
@@ -141,4 +161,20 @@ void checkWindowResized() {
   }
   _height = height;
   _width = width;
+}
+
+void showHelp() {
+  float textBase = height * 0.2;
+  int textInterval = 20;
+  stroke(0);
+  strokeWeight(1);
+  fill(0,200);
+  rectMode(CORNER);
+  rect(width / 10, textBase - textInterval, width * 0.8, (helpStrings.length + 1) * textInterval);
+  fill(200);
+  textAlign(LEFT);
+  textSize(16);
+  for (int i = 0; i < helpStrings.length; i ++ ) {
+    text(helpStrings[i], width / 10, textBase + (i * textInterval));
+  }
 }

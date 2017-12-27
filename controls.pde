@@ -36,6 +36,10 @@ void keyPressed()
     display.showInfo = !display.showInfo;
   }
 
+  if (key == 'h') {
+    showHelp = !showHelp;
+  }
+
   if (key == 'c') {
     float halfDisplayedPerc = display.displayedPerc / 2.;
     if (!display.followPlayhead) {
@@ -79,6 +83,14 @@ void keyPressed()
     display.setPercPos(startPerc, endPerc);
 
   }
+
+  if (controlPressed) {
+    if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second
+    if (keyPressed && keyCode == 37) player.cue(player.position() - 1000);
+  } else {
+    if (keyPressed && keyCode == 39) player.cue(player.position() + 5000); //skip forward five seconds
+    if (keyPressed && keyCode == 37) player.cue(player.position() - 5000);
+  }
 }
 
 void mouseDragged() {
@@ -107,4 +119,8 @@ void keyReleased() {
   if (keyCode == 16) {
     shiftPressed = false;
   }
+}
+
+void checkButtons() { //this runs every loop and looks for action to be repeated when a key is held
+
 }
