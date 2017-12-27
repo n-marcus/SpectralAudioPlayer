@@ -7,6 +7,7 @@ void selectNewFile() {
 }
 
 void loadNewFile(String fullFileName) {
+  int startTime = millis();//record starting time
   File f = new File(fullFileName);
   fileName = f.getName();
   loadingFile = true;
@@ -41,6 +42,8 @@ void loadNewFile(String fullFileName) {
       errorOccured = true;
     }
     loadingFile = false;
+    int endTime = millis() - startTime;
+    loadingTimeText = new FadingText(width - 200, 50, 10000, "Loaded file in " + endTime + "ms");
   }
 
   void fileSelected(File selection) {

@@ -45,6 +45,8 @@ boolean loadingFile = false;
 boolean showHelp = false;
 
 FadingText helpText;
+FadingText loadingTimeText;
+
 String[] helpStrings = {
   "Press space to pause / play loaded audio file",
   "Click anywhere in the spectrum to move to that location within the file",
@@ -73,6 +75,7 @@ void setup() {
   surface.setResizable(true);
 
   helpText = new FadingText(50 ,50 , 30000, "Press 'h' to for shortcuts and explanations");
+
 
 }
 
@@ -141,6 +144,8 @@ void draw() {
 
 
     if (helpText.alive) helpText.update();
+    if (loadingTimeText != null && loadingTimeText.alive) loadingTimeText.update();
+
     if (showHelp) showHelp();
   }
 

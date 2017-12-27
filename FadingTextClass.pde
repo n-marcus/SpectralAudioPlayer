@@ -18,12 +18,14 @@ class FadingText {
     this.endTime = startTime + duration;
     this.totalTime = duration;
     this.decrement = 255. / float(totalTime);
+    println("Created fadingtext object saying: " + text + " on location " + xPos + ", " + yPos);
   }
 
   void update() {
     if (this.alpha > 0) {
       this.alpha = 255. - (decrement * (millis() - startTime));
       fill(255, alpha);
+      noStroke();
       textSize(12);
       text(this.text, xPos, yPos);
     } else {
