@@ -36,6 +36,15 @@ void keyPressed()
     display.showInfo = !display.showInfo;
   }
 
+  if (key == 'c') {
+    float halfDisplayedPerc = display.displayedPerc / 2.;
+    if (!display.followPlayhead) {
+      display.setPercPos(display.posPerc - halfDisplayedPerc, display.displayedPerc);
+      } else {
+      display.followPlayheadOffset = int(halfDisplayedPerc * float(display.totalTime));
+      }
+    }
+
   if (keyCode == 17) {
     controlPressed = true;
   }

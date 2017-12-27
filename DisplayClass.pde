@@ -9,6 +9,8 @@ class Display {
 
   float startDisplayPerc = 0.; //percentage where the display starts within the sample
   float endDisplayPerc = 1.; //percentage where the display ends within the sample
+  float displayedPerc = 1.; //total percentage displayed in display
+  float posPerc = 0.;
 
   int displayX; //width of display
   int displayY; //height of display
@@ -43,9 +45,11 @@ class Display {
       // if (followPlayhead) setAbsPos(positionInFile - followPlayheadOffset, displayedMs);
       spec.updateSpectrum(displayX, displayY, startDisplayPerc, endDisplayPerc);
       if (followPlayhead) {
+        //first we calculate where the display should start keeping the same percentage from the playhead
         float startPerc = (float(display.positionInFile) / float(display.totalTime)) - (float(followPlayheadOffset) / float(totalTime));
+        // the we check how long the display should be
         float endPerc = float(displayedMs) / float(totalTime);
-        this.setPercPos(startPerc, endPerc);
+        this.setPercPos(startPerc, endPerc); //make sure the display follows the playhead
       }
     } else if (!spectralDisplay){
       wave.updateWaveform();
@@ -55,15 +59,18 @@ class Display {
   }
 
   void drawInfo() {
-    if (showInfo && mouseX < displayX && mouseY < displayY) {
+    if (showInfo && mouseX < displayX && mouseY < waveformHeight) {
       if (!mousePressed) {
-        String msString = getAbsoluteTime(mouseX) / 1000. + "ms";
+        String msString = getAbsoluteTime(mouseX) / 1000. + "s";
         String freqString = spec.getHz(mouseY) + "Hz";
+        String ampString = "power: " + nfc(spec.getAmp(mouseX, mouseY), 2);
+        pushMatrix();
+        translate(10, - 35);
         // String hzString =
         rectMode(CORNER);
         stroke(255);
         fill(255,100);
-        rect(mouseX, mouseY,60, 25);
+        rect(mouseX, mouseY,70, 35);
 
         stroke(255);
         fill(255);
@@ -71,9 +78,14 @@ class Display {
         textAlign(CORNER);
         text(msString, mouseX, mouseY + 10);
         text(freqString, mouseX, mouseY + 20);
+        text(ampString, mouseX, mouseY + 30);
+        popMatrix();
+        // text()
       }
     }
   }
+
+
 
 
   void switchFollowPlayhead() {
@@ -91,22 +103,36 @@ class Display {
 
     rectMode(CORNERS);
     rect(barXPos, displayY - barHeight, constrain(barLength + barXPos, barLength, displayX - 1), displayY);
+
+    //draw smaller playhead in selectionbar
+    if (followPlayhead) {
+      stroke(100,10,35);
+      fill(100,10,35);
+    }
+    else {
+      stroke(255);
+      fill(255);
+    }
+    float xPos = (float(positionInFile) / float(totalTime)) * displayX;
+    rectMode(CORNER);
+    rect(xPos, displayY - barHeight, 3, barHeight);
   }
 
   void drawPlayhead(int pos) {
     float pixelsPerMs = float(displayX) / float(displayedMs);
     float offsetFromStart = pos - displayStart;
     positionInFile = pos;
+    posPerc = float(positionInFile) / float(totalTime);
     if (offsetFromStart >= 0) {
       float xPos = offsetFromStart * pixelsPerMs;
-      stroke(255,0,0);
+      if (followPlayhead) {
+        stroke(100,10,35);
+      }
+      else {
+        stroke(255);
+      }
       line(xPos, 0, xPos, waveformHeight);
     }
-
-    //draw smaller playhead in selectionbar
-
-    float xPos = (float(pos) / float(totalTime)) * displayX;
-    line(xPos, displayY - barHeight, xPos, displayY);
   }
 
   void switchDisplay() {
@@ -122,6 +148,7 @@ class Display {
 
     startDisplayPerc = float(displayStart) / float(totalTime); //calculate percentages from ms data
     endDisplayPerc = float(displayStart + displayedMs) / float(totalTime);
+    displayedPerc = float(displayedMs) / float(totalTime);
 
     //println("displayStart is now " + displayStart + " displayedMs is now " + displayedMs + " totalTime = " + totalTime);
   }
@@ -146,9 +173,9 @@ class Display {
       if ((i + displayStart) % msPerLine == 0) {  //if we encounter a ms that fits within our current snapping setting (msPerLine)
         float xPos = (i * pixelsPerMs); //absolute xP os of grid
         int currentMs = constrain(i + displayStart, displayStart, displayEnd); //absolute ms we are working with now
+        fill(200, 150); // text color for grid
         if (xPos > 0 && xPos < displayX) {
           if (currentMs % 100 == 0 && msPerLine <= 100 && currentMs % 1000 != 0 && currentMs % 500 != 0 ) {
-
             stroke(100, 100); //this is the color for the smallest interval
             textSize(8);
             if (displayedMs < 2000) text(currentMs / 1000. + "s", xPos + 20, displayY - (barHeight * 3));

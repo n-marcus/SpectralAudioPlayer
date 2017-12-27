@@ -43,6 +43,8 @@ boolean controlPressed = false;
 boolean shiftPressed = false;
 boolean loadingFile = false;
 
+FadingText helpText;
+
 void setup() {
   selectInput("Select a file to process:", "fileSelected");
   // loadNewFile("C:/Users/Nathan/Music/SoundsSamplesandSnippets/Boutiq 1/zingende kids afrika.wav");
@@ -54,7 +56,7 @@ void setup() {
   minim = new Minim(this);
   surface.setResizable(true);
 
-
+  helpText = new FadingText(50 ,50 , 30000, "Press 'h' to for shortcuts and explanations");
 }
 
 void draw() {
@@ -77,6 +79,8 @@ void draw() {
   }
   if (makingWaveForm) text("Generating waveform...", width / 2, height /2);
   if (!fileLoaded && !errorOccured && loadingFile) {
+    textSize(42);
+    fill(175);
     text("Loading file ", width / 2, height /2);
     text(fileName, width / 2, height / 2 + 50);
   }
@@ -102,14 +106,22 @@ void draw() {
       }
       if (mousePressed && keyPressed && keyCode == 16) display.setYScale((float(height - mouseY) * 2. )/ float(height));
        // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
+
+      pushMatrix(); //make a different coordinate system
       translate(0, waveformHeight - 5); //move down to make a second window
       if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
       drawSpectrumAxis();
-      // translate(0, - (waveformHeight - 5));
+      popMatrix(); //back to normal coordinate system
     }
-    textAlign(CORNER);
-    text(nfc(frameRate, 2) + "fps", 20, 20);
 
+
+    textAlign(CORNER);
+    textSize(8);
+    text(nfc(frameRate, 2) + "fps",20,waveformHeight + 20);
+
+
+
+    if (helpText.alive) helpText.update();
   }
 
 

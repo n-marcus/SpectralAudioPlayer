@@ -15,6 +15,7 @@ class Spectrum {
   float _endPerc;
   float increment;
   boolean debug = false;
+  int totalTime = 0;
   int barHeight = 10;
   float[][] spectra;
   float[] yPosArray;
@@ -22,12 +23,14 @@ class Spectrum {
 
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
+        totalTime = sample.length();
     fftSize = _fftSize;
     calcSpectrum();
   }
 
   Spectrum(AudioSample _sample, int _fftSize, int displayX, int displayY) {
     sample = _sample;
+    totalTime = sample.length();
     fftSize = _fftSize;
     calcSpectrum();
     this.displayX = displayX;
@@ -222,6 +225,31 @@ class Spectrum {
 
       float getHz(int yPos) {
         // println("Looking for band at yPos " + yPos);
+        // float theNumber = yPosArray[getBand(yPos)];
+        // println("bandNumber = " + bandNumber);
+
+        float freqCenter = (float(getBand(yPos)) / float(fftSize)) * sample.sampleRate();
+        // println("freqCenter = " + freqCenter);
+        return freqCenter;
+      }
+
+      float getAmp (int xPos, int yPos) { //get the amplitude of a specific band at a specific moment in time
+        int bandNumber = getBand(yPos);
+        int timeInSample = getAbsoluteTime(xPos);
+        float percOfTotalSample = float(timeInSample) / float(totalTime);
+        int chunkNumber = int(percOfTotalSample * totalChunks);
+        //println("numChunk " + chunkNumber + " bandnumber "+ bandNumber + " at time " + timeInSample );
+
+        float amp = 0.;
+        try {
+          amp = spectra[chunkNumber][bandNumber];
+        } catch (Exception e) {
+          println("something went wrong getting the amplitude of band " + bandNumber + " at time " + timeInSample);
+        }
+        return amp;
+      }
+
+      int getBand(int yPos) { //this function translates a real yPosition on the screen to the relevant band number in the fft analysis
         yPos = displayY - yPos;
         float distance = Math.abs(yPosArray[0] - yPos);
         int bandNumber = 0;
@@ -232,12 +260,7 @@ class Spectrum {
                 distance = cdistance;
             }
         }
-        float theNumber = yPosArray[bandNumber];
-        // println("bandNumber = " + bandNumber);
-
-        float freqCenter = (float(bandNumber) / float(fftSize)) * sample.sampleRate();
-        // println("freqCenter = " + freqCenter);
-        return freqCenter;
+        return bandNumber;
       }
 
       void setGain(float _gain) {

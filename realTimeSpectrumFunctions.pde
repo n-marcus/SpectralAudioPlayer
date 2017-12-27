@@ -1,9 +1,12 @@
 FloatList spectrumAxisHz = new FloatList();
 FloatList spectrumAxisxPos = new FloatList();
+float _xPos;
+float xPos;
+float lastUsedXPos;
 
 void initRealTimeSpectrum() {
   for (int i = 0; i < fft.specSize(); i++) {
-    if (i % 20 == 0) {
+    if (i % 10 == 0) {
       spectrumAxisHz.append(fft.indexToFreq(i));
       spectrumAxisxPos.append(getXPos(i));
     }
@@ -11,10 +14,15 @@ void initRealTimeSpectrum() {
 }
 
 void drawSpectrumAxis() {
+  lastUsedXPos = 0;
   for (int i = 0; i < spectrumAxisHz.size(); i ++) {
-
-    textSize(10);
-    text(spectrumAxisHz.get(i) + "Hz", spectrumAxisxPos.get(i), height - waveformHeight);
+    xPos = spectrumAxisxPos.get(i);
+    if (xPos - lastUsedXPos > 40) {
+      lastUsedXPos = xPos;
+      textSize(10);
+      text(int(spectrumAxisHz.get(i)) + "Hz", xPos , height - waveformHeight - 10);
+    }
+    _xPos = xPos;
   }
 }
 

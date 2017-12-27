@@ -7,28 +7,27 @@ class FadingText {
   String text = "";
   int xPos;
   int yPos;
-  boolean fading = true;
+  boolean alive = true;
 
   FadingText(int xPos, int yPos, int duration, String text) {
     this.text = text;
     this.xPos = xPos;
     this.yPos = yPos;
 
-    startTime = millis();
-    endTime = startTime + duration;
-    totalTime = duration;
-    decrement = 255. / float(totalTime);
-    textSize(12);
+    this.startTime = millis();
+    this.endTime = startTime + duration;
+    this.totalTime = duration;
+    this.decrement = 255. / float(totalTime);
   }
 
   void update() {
-    if (alpha > 0) {
-      alpha = 255. - (decrement * (millis() - startTime));
+    if (this.alpha > 0) {
+      this.alpha = 255. - (decrement * (millis() - startTime));
       fill(255, alpha);
       textSize(12);
       text(this.text, xPos, yPos);
     } else {
-      fading = false;
+      this.alive = false;
     }
   }
 }
