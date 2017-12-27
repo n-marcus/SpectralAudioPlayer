@@ -42,6 +42,11 @@ class Display {
     if (spectralDisplay) {
       // if (followPlayhead) setAbsPos(positionInFile - followPlayheadOffset, displayedMs);
       spec.updateSpectrum(displayX, displayY, startDisplayPerc, endDisplayPerc);
+      if (followPlayhead) {
+        float startPerc = (float(display.positionInFile) / float(display.totalTime)) - (float(followPlayheadOffset) / float(totalTime));
+        float endPerc = float(displayedMs) / float(totalTime);
+        this.setPercPos(startPerc, endPerc);
+      }
     } else if (!spectralDisplay){
       wave.updateWaveform();
     }
@@ -146,17 +151,17 @@ class Display {
 
             stroke(100, 100); //this is the color for the smallest interval
             textSize(8);
-            if (displayedMs < 2000) text(currentMs / 1000. + "s", xPos + 20, displayY - (barHeight * 4));
+            if (displayedMs < 2000) text(currentMs / 1000. + "s", xPos + 20, displayY - (barHeight * 3));
           }
           if (currentMs % 500 == 0 && msPerLine <= 500 && currentMs % 1000 != 0) { //if this half a second, and not a hunderdth of a second or a whole one
             stroke(200, 100); /// if this is a half second
             textSize(9);
-            text(currentMs / 1000. + "s", xPos + 15, displayY - (barHeight *3));
+            text(currentMs / 1000. + "s", xPos + 15, displayY - (barHeight *2));
           }
           if (currentMs % 1000 == 0) { //if this is a whole second
             stroke(200, 150);
             textSize(10);
-            text(currentMs / 1000 + "s", xPos + 10, displayY - (barHeight * 2));
+            text(currentMs / 1000 + "s", xPos + 10, displayY - (barHeight * 1.5));
           }
           line(xPos, 0, xPos, displayY - barHeight);
         }

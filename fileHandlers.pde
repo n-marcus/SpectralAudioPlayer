@@ -6,8 +6,12 @@ void selectNewFile() {
   selectInput("Select a file to process:", "fileSelected");
 }
 
-void loadNewFile(String fileName) {
-  println("loading file: " + fileName);
+void loadNewFile(String fullFileName) {
+  File f = new File(fullFileName);
+  fileName = f.getName();
+  loadingFile = true;
+  // fileName = fileName[fileName.length];
+  println("loading file: " + fullFileName);
   if (fileLoaded) {
     println("disposing player object...");
     minim.debugOn();
@@ -18,9 +22,11 @@ void loadNewFile(String fileName) {
     // sound.remove();
   }
 
+  fileLoaded = false;
+
   try {
-    sound = minim.loadSample(fileName);
-    player = minim.loadFile(fileName);
+    sound = minim.loadSample(fullFileName);
+    player = minim.loadFile(fullFileName);
     fft = new FFT(player.bufferSize(), 2048 * 4);
     initRealTimeSpectrum();
     display = new Display(sound, width, waveformHeight);
@@ -34,6 +40,7 @@ void loadNewFile(String fileName) {
       println("something went wrong");
       errorOccured = true;
     }
+    loadingFile = false;
   }
 
   void fileSelected(File selection) {

@@ -40,16 +40,35 @@ void keyPressed()
     controlPressed = true;
   }
 
+  if (keyCode == 16) {
+    shiftPressed = true;
+  }
+
   if (key == 'x') {
     exit();
   }
 
-  if (controlPressed && keyCode == 61) {
-         display.setGain(display.getGain() + 0.2);
+  if (controlPressed && shiftPressed && keyCode == 61) {
+    display.setGain(display.getGain() + 0.2);
   }
 
-  if (controlPressed && keyCode == 45) {
-             display.setGain(display.getGain() - 0.2);
+  if (controlPressed && shiftPressed && keyCode == 45) {
+    display.setGain(display.getGain() - 0.2);
+  }
+
+  if (controlPressed && !shiftPressed && keyCode == 61) {
+    float startPerc =(float(display.positionInFile) / float(display.totalTime)) - 0.1;
+    float endPerc = (display.endDisplayPerc - display.startDisplayPerc) - 0.05;
+    println("zooming in to: " + startPerc + " , " + endPerc);
+    display.setPercPos(startPerc, endPerc);
+  }
+
+  if (controlPressed && !shiftPressed && keyCode == 45) {
+    float startPerc =(float(display.positionInFile) / float(display.totalTime)) - 0.1;
+    float endPerc = (display.endDisplayPerc - display.startDisplayPerc) + 0.05;
+    println("zooming out");
+    display.setPercPos(startPerc, endPerc);
+
   }
 }
 
@@ -74,5 +93,9 @@ void mouseReleased() {
 void keyReleased() {
   if (keyCode == 17) {
     controlPressed = false;
+  }
+
+  if (keyCode == 16) {
+    shiftPressed = false;
   }
 }
