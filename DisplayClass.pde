@@ -19,6 +19,8 @@ class Display {
 
   boolean spectralDisplay = true; //toggle between waveform and spectrum
   boolean mouseOver = false;
+  boolean showInfo = false;
+
   boolean followPlayhead = false;
   int followPlayheadOffset = 0;
 
@@ -38,7 +40,7 @@ class Display {
 
   void update() {
     if (spectralDisplay) {
-      if (followPlayhead) setAbsPos(positionInFile - followPlayheadOffset, displayedMs);
+      // if (followPlayhead) setAbsPos(positionInFile - followPlayheadOffset, displayedMs);
       spec.updateSpectrum(displayX, displayY, startDisplayPerc, endDisplayPerc);
     } else if (!spectralDisplay){
       wave.updateWaveform();
@@ -46,6 +48,28 @@ class Display {
     drawSelectionBar();
     drawGrid();
   }
+
+  void drawInfo() {
+    if (showInfo && mouseX < displayX && mouseY < displayY) {
+      if (!mousePressed) {
+        String msString = getAbsoluteTime(mouseX) / 1000. + "ms";
+        String freqString = spec.getHz(mouseY) + "Hz";
+        // String hzString =
+        rectMode(CORNER);
+        stroke(255);
+        fill(255,100);
+        rect(mouseX, mouseY,60, 25);
+
+        stroke(255);
+        fill(255);
+        textSize(10);
+        textAlign(CORNER);
+        text(msString, mouseX, mouseY + 10);
+        text(freqString, mouseX, mouseY + 20);
+      }
+    }
+  }
+
 
   void switchFollowPlayhead() {
     followPlayhead = !followPlayhead;
@@ -70,7 +94,7 @@ class Display {
     positionInFile = pos;
     if (offsetFromStart >= 0) {
       float xPos = offsetFromStart * pixelsPerMs;
-      stroke(255);
+      stroke(255,0,0);
       line(xPos, 0, xPos, waveformHeight);
     }
 
@@ -158,5 +182,14 @@ class Display {
     } else {
       wave.setYScale(_YScale);
     }
+  }
+
+  void setGain(float _gain) {
+    println("setting gain to: " + _gain);
+    spec.setGain(_gain);
+  }
+
+  float getGain() {
+    return spec.gain;
   }
 }

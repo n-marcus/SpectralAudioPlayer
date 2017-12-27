@@ -8,6 +8,16 @@ void selectNewFile() {
 
 void loadNewFile(String fileName) {
   println("loading file: " + fileName);
+  if (fileLoaded) {
+    println("disposing player object...");
+    minim.debugOn();
+    player.close();
+    sound.close();
+    minim.debugOff();
+    // player.remove();
+    // sound.remove();
+  }
+
   try {
     sound = minim.loadSample(fileName);
     player = minim.loadFile(fileName);
@@ -16,8 +26,8 @@ void loadNewFile(String fileName) {
     display = new Display(sound, width, waveformHeight);
     // spec = new Spectrum(sound, 2048, width , waveformHeight);
     fileLoaded = true;
-
-    thread("makeWaveform");
+    errorOccured = false;
+    // thread("makeWaveform");
     // thread("initSpectrum");
     } catch (Exception e) {
       e.printStackTrace();

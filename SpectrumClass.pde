@@ -1,7 +1,7 @@
 class Spectrum {
   AudioSample sample;
   int fftSize;
-  float yScale = 0.5;
+  float yScale = 0.2;
   float pixelsPerChunk = 2;
   int displayX = width;
   int displayY = height;
@@ -17,6 +17,8 @@ class Spectrum {
   boolean debug = false;
   int barHeight = 10;
   float[][] spectra;
+  float[] yPosArray;
+  float gain = 1.;
 
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
@@ -34,23 +36,32 @@ class Spectrum {
 
   void drawSpectrum() {
     float xPos = 0; //initialize x position
+    int skipEvery = 1;
+    if (pixelsPerChunk < 0.9) {
+
+       skipEvery = int(1./(pixelsPerChunk + 0.1));
+       // skipEvery = constrain(skipEvery, 1, 1000);
+       // println("pixels per chunk = " + pixelsPerChunk + "skip every " + skipEvery);
+    }
+
     for (int i = startChunk; i < startChunk + numChunks && i < spectra.length - 1; i += 1) { //as long as we are between the startChunk and endChunk and not over the lenght of available chunks
       xPos += pixelsPerChunk;// + (increment - 1); //move everything xScale  to the right
       for (int j = 0; j < spectra[i].length; j ++) {
-        if (spectra[i][j] > 0.0) {
-          float yPos = displayY - getYPos(j);
+        if (spectra[i][j] > .05 && (i + 1) % skipEvery == 0) {
+          float yPos = displayY - yPosArray[j];
           if (yPos > 0 && yPos > displayY && xPos > 0 && xPos < displayX) {}
-          float nextYPos = 0.;
-          if (j < spectra[i].length) {
-            nextYPos = displayY - getYPos(j + 1);
-          }
-          float brightness = map(spectra[i][j], 0.0, 35., 0., 300.);
+            float nextYPos = 0.;
+            if (j < yPosArray.length - 1) {
+              nextYPos = displayY - yPosArray[j + 1];
+            }
 
-          //draw actual points
-          //point(xPos, yPos);
-          stroke(brightness);
-          strokeWeight(1);
-          line(xPos, yPos, xPos, nextYPos);
+            float brightness = map(spectra[i][j] * gain, 0.0, 35., 0., 300.);
+
+            //draw actual points
+            point(xPos, yPos);
+            strokeWeight(1);
+            stroke(brightness);
+            // line(xPos, yPos, xPos, nextYPos);
         }
       }
     }
@@ -177,6 +188,15 @@ class Spectrum {
           }
         }
 
+        yPosArray = new float[spectra[0].length];
+        for (int i = 0; i < yPosArray.length; i ++) {
+          float val = (sqrt(i *(yScale * width))) * 1.1;
+          yPosArray[i] = val;
+          // println("Setting yPos " + i + " to " + yPosArray[i]);
+
+        }
+        // println(yPosArray);
+
         sample.close();
         println("Made FFT data in " + (millis() - startTime) + "ms");
         println("Number of horizontal points = " + spectra.length);
@@ -192,6 +212,35 @@ class Spectrum {
       void setYScale(float _YScale) {
         this.yScale = _YScale;
         println("Set yScale to: " + this.yScale);
+        for (int i = 0; i < yPosArray.length; i ++) {
+          float val = (sqrt(i *(yScale * width))) * 1.1;
+          yPosArray[i] = val;
+          // println("Setting yPos " + i + " to " + yPosArray[i]);
 
+        }
+      }
+
+      float getHz(int yPos) {
+        // println("Looking for band at yPos " + yPos);
+        yPos = displayY - yPos;
+        float distance = Math.abs(yPosArray[0] - yPos);
+        int bandNumber = 0;
+        for(int c = 1; c < yPosArray.length; c++){
+            float cdistance = Math.abs(yPosArray[c] - yPos);
+            if(cdistance < distance){
+                bandNumber = c;
+                distance = cdistance;
+            }
+        }
+        float theNumber = yPosArray[bandNumber];
+        // println("bandNumber = " + bandNumber);
+
+        float freqCenter = (float(bandNumber) / float(fftSize)) * sample.sampleRate();
+        // println("freqCenter = " + freqCenter);
+        return freqCenter;
+      }
+
+      void setGain(float _gain) {
+        this.gain = _gain;
       }
     }

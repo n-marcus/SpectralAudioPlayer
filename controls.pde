@@ -6,15 +6,6 @@ void keyPressed()
     display.switchDisplay();
   }
 
-  if (keyCode == 39) { //key right
-    player.cue(player.position() + 1000);
-    println("skipping 10 forward");
-  }
-
-  if (keyCode == 37) { //key left
-    player.cue(player.position() - 1000);
-    println("skipping 10 backwards");
-  }
 
   if (keyCode == 32) { //space key
     if (player.isPlaying()) player.pause();
@@ -41,6 +32,25 @@ void keyPressed()
   if (key == 'f') {
     display.switchFollowPlayhead();
   }
+  if (key == 'i') {
+    display.showInfo = !display.showInfo;
+  }
+
+  if (keyCode == 17) {
+    controlPressed = true;
+  }
+
+  if (key == 'x') {
+    exit();
+  }
+
+  if (controlPressed && keyCode == 61) {
+         display.setGain(display.getGain() + 0.2);
+  }
+
+  if (controlPressed && keyCode == 45) {
+             display.setGain(display.getGain() - 0.2);
+  }
 }
 
 void mouseDragged() {
@@ -54,8 +64,15 @@ void mouseReleased() {
     mouseRightDragged = false;
   }
 
-  if (mouseButton == 37 && !keyPressed) {
-    player.cue(display.getAbsoluteTime(mouseX));
+  if (mouseButton == 37 && !keyPressed && mouseY < waveformHeight) {
+    if (player != null) player.cue(display.getAbsoluteTime(mouseX));
   }
   println("released mousebutton " + mouseButton);
+}
+
+
+void keyReleased() {
+  if (keyCode == 17) {
+    controlPressed = false;
+  }
 }
