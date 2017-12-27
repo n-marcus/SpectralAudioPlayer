@@ -18,6 +18,9 @@ int averageLenght = 16384 / 12; //this determines the detail in the waveform
 float pixelsPerSec;
 int secTextInterval;
 
+int _height;
+int _width;
+
 boolean mouseRightDragged = false;
 boolean madeLoop = false;
 int loopIn;
@@ -46,12 +49,17 @@ void setup() {
   sampleAverage = new FloatList();
   draggedLoopPoints = new IntList(); //only make new intlist when we
   size(1024, 600, OPENGL);
+  waveformHeight = int(height / 3. * 2.);
   pixelDensity(2);
   minim = new Minim(this);
+  surface.setResizable(true);
+
+
 }
 
 void draw() {
   background(20);
+  checkWindowResized();
   // smooth();
   textSize(42);
   fill(175);
@@ -108,4 +116,17 @@ void draw() {
 int xPos2Time(int xPos) { //this function translates a point in x space to the time in the sample within the player object
   int time = int(map(xPos, 0, width, 0, player.length()));
   return time;
+}
+
+void checkWindowResized() {
+  if (height != _height || width != _width) {
+    println("resized!");
+    if (fileLoaded) {
+      display.displayX = width;
+      waveformHeight = int(height / 3. * 2.);
+      display.displayY = waveformHeight;
+    }
+  }
+  _height = height;
+  _width = width;
 }
