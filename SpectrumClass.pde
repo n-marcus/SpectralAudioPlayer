@@ -64,9 +64,13 @@ class Spectrum {
             brightness = contrast * (brightness - 128) + 128;
 
             //draw actual points
-            point(xPos, yPos);
             strokeWeight(1);
             stroke(brightness);
+            if (pixelsPerChunk < 2) {
+              point(xPos, yPos);
+            } else {
+              line(xPos, yPos, xPos + pixelsPerChunk, yPos);
+            }
             // line(xPos, yPos, xPos, nextYPos);
         }
       }

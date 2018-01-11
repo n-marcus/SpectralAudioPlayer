@@ -229,4 +229,29 @@ class Display {
     spec.contrast = spec.contrast + increment;
     println("Changed contrast to: " + spec.contrast);
   }
+
+  void centerDisplay() {
+    float halfDisplayedPerc = display.displayedPerc / 2.;
+      if (!followPlayhead) {
+        setPercPos(display.posPerc - halfDisplayedPerc, displayedPerc);
+      } else {
+        followPlayheadOffset = int(halfDisplayedPerc * float(totalTime));
+      }
+  }
+
+  void zoomIn(float perc) {
+    float startPerc =(float(positionInFile) / float(totalTime)) - perc;
+    float endPerc = (endDisplayPerc - startDisplayPerc) - perc;
+    println("zooming in to: " + startPerc + " , " + endPerc);
+    setPercPos(startPerc, endPerc);
+    centerDisplay();
+  }
+
+  void zoomOut(float perc) {
+    float startPerc =(float(positionInFile) / float(totalTime)) - perc;
+    float endPerc = (endDisplayPerc - startDisplayPerc) + perc;;
+    println("zooming out");
+    setPercPos(startPerc, endPerc);
+    centerDisplay();
+  }
 }

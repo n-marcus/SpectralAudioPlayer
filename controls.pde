@@ -29,57 +29,35 @@ void keyPressed()
     println("shiftPressed = true");
   }
 
-  switch (key) {
-    case 'l': madeLoop =! madeLoop;
-    case 'n': selectNewFile();
-    case 'f': display.switchFollowPlayhead();
-    case 'i': display.showInfo = !display.showInfo;
-    case 'h': showHelp = !showHelp;
-    case 'c':
-    float halfDisplayedPerc = display.displayedPerc / 2.;
-      if (!display.followPlayhead) {
-        display.setPercPos(display.posPerc - halfDisplayedPerc, display.displayedPerc);
-      } else {
-        display.followPlayheadOffset = int(halfDisplayedPerc * float(display.totalTime));
-      }
+    if (key == 'l') madeLoop =! madeLoop;
+    else if (key == 'n') selectNewFile();
+    else if (key == 'f')  display.switchFollowPlayhead();
+    else if (key == 'i')  display.showInfo = !display.showInfo;
+    else if (key == 'h')  showHelp = !showHelp;
+    else if (key == 'c')  display.centerDisplay();
+
   //  case 'x': exit();
-  }
 
 
-  if (controlPressed && shiftPressed && keyCode == 61) {
-    display.setGain(display.getGain() + 0.2);
-    println("shiftPressed = " + shiftPressed);
-    println("controlPressed = " + controlPressed);
 
-  }
 
-  if (controlPressed && shiftPressed && keyCode == 45) {
-    display.setGain(display.getGain() - 0.2);
-    println("shiftPressed = " + shiftPressed);
-    println("controlPressed = " + controlPressed);
-  }
 
-  if (controlPressed && !shiftPressed && keyCode == 61) {
-    float startPerc =(float(display.positionInFile) / float(display.totalTime)) - 0.1;
-    float endPerc = (display.endDisplayPerc - display.startDisplayPerc) - 0.05;
-    println("zooming in to: " + startPerc + " , " + endPerc);
-    display.setPercPos(startPerc, endPerc);
-  }
 
-  if (controlPressed && !shiftPressed && keyCode == 45) {
-    float startPerc =(float(display.positionInFile) / float(display.totalTime)) - 0.1;
-    float endPerc = (display.endDisplayPerc - display.startDisplayPerc) + 0.05;
-    println("zooming out");
-    display.setPercPos(startPerc, endPerc);
-  }
 
 
 
   if (controlPressed) {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second
     if (keyPressed && keyCode == 37) player.cue(player.position() - 1000);
-    if (keyPressed && keyCode == 38) display.incrementContrast(0.4);
-    if (keyPressed && keyCode == 40) display.incrementContrast(-0.4);
+    if (keyPressed && keyCode == 38) display.incrementContrast(0.3);
+    if (keyPressed && keyCode == 40) display.incrementContrast(-0.3);
+    if (shiftPressed && keyCode == 38) display.setGain(display.getGain() - 0.2);
+    if (shiftPressed && keyCode == 40) display.setGain(display.getGain() + 0.2);
+
+    if (!shiftPressed && keyCode == 61) display.zoomIn(0.1);
+    if (shiftPressed && keyCode == 61) display.zoomIn(0.01);
+    if (!shiftPressed && keyCode == 45) display.zoomOut(0.1);
+    if (shiftPressed && keyCode == 45) display.zoomOut(0.01);
   } else {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 5000); //skip forward five seconds
     if (keyPressed && keyCode == 37) player.cue(player.position() - 5000);
