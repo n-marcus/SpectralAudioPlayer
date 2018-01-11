@@ -20,10 +20,11 @@ class Spectrum {
   float[][] spectra;
   float[] yPosArray;
   float gain = 1.;
+  float contrast = 1.;
 
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
-        totalTime = sample.length();
+    totalTime = sample.length();
     fftSize = _fftSize;
     calcSpectrum();
   }
@@ -40,6 +41,7 @@ class Spectrum {
   void drawSpectrum() {
     float xPos = 0; //initialize x position
     int skipEvery = 1;
+
     if (pixelsPerChunk < 0.9) {
 
        skipEvery = int(1./(pixelsPerChunk + 0.1));
@@ -59,6 +61,7 @@ class Spectrum {
             }
 
             float brightness = map(spectra[i][j] * gain, 0.0, 35., 0., 300.);
+            brightness = contrast * (brightness - 128) + 128;
 
             //draw actual points
             point(xPos, yPos);

@@ -224,4 +224,9 @@ class Display {
   float getGain() {
     return spec.gain;
   }
+
+  void incrementContrast(float increment) {
+    spec.contrast = spec.contrast + increment;
+    println("Changed contrast to: " + spec.contrast);
+  }
 }
