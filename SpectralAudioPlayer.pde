@@ -162,6 +162,9 @@ void draw() {
     if (loadingTimeText != null && loadingTimeText.alive) loadingTimeText.update();
 
     if (showHelp) showHelp();
+    fill(150);
+    textSize(10);
+    if (player != null) text(player.position() / 1000., 40,  waveformHeight + 40);
   }
 
 

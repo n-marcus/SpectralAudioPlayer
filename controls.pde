@@ -45,10 +45,10 @@ void keyPressed()
   if (controlPressed) {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second
     if (keyPressed && keyCode == 37) player.cue(player.position() - 1000);
-    if (keyPressed && keyCode == 38) display.incrementContrast(0.3);
-    if (keyPressed && keyCode == 40) display.incrementContrast(-0.3);
-    if (shiftPressed && keyCode == 38) display.setGain(display.getGain() - 0.2);
-    if (shiftPressed && keyCode == 40) display.setGain(display.getGain() + 0.2);
+    if (keyPressed && keyCode == 38) display.incrementContrast(0.15);
+    if (keyPressed && keyCode == 40) display.incrementContrast(-0.15);
+    if (shiftPressed && keyCode == 38) display.setGain(display.getGain() - 0.1);
+    if (shiftPressed && keyCode == 40) display.setGain(display.getGain() + 0.1);
 
     if (!shiftPressed && keyCode == 61) display.zoomIn(0.1);
     if (shiftPressed && keyCode == 61) display.zoomIn(0.01);

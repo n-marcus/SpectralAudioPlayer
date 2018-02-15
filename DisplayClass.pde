@@ -26,6 +26,11 @@ class Display {
   boolean followPlayhead = false;
   int followPlayheadOffset = 0;
 
+  LPFilter playheadFilter;
+  LPFilter startDisplayFilter;
+  LPFilter endDisplayFilter;
+  LPFilter displayLengthFilter;
+
   Display(AudioSample sample, int displayX, int displayY) {
     this.displayX = displayX;
     this.displayY = displayY;
@@ -36,8 +41,12 @@ class Display {
 
     println("Total time in display = " + totalTime);
 
-    spec = new Spectrum(sample, 4096, displayX, displayY);
+    spec = new Spectrum(sample, 1024, displayX, displayY);
     wave = new Waveform(sample, displayX, displayY);
+    playheadFilter = new LPFilter(0.);
+    startDisplayFilter = new LPFilter(0.);
+    endDisplayFilter = new LPFilter(0.);
+    displayLengthFilter = new LPFilter(0.);
   }
 
   void update() {
@@ -125,14 +134,18 @@ class Display {
     posPerc = float(positionInFile) / float(totalTime);
     if (offsetFromStart >= 0) {
       float xPos = offsetFromStart * pixelsPerMs;
+      xPos = playheadFilter.update(xPos, 0.5);
       if (followPlayhead) {
         stroke(100,10,35);
+        strokeWeight(5);
       }
       else {
         stroke(255);
+        strokeWeight(1);
       }
       line(xPos, 0, xPos, waveformHeight);
-    }
+    } else if (offsetFromStart < 0) playheadFilter.update(0,0.5);
+      else if (offsetFromStart > displayX) playheadFilter.update(width, 0.5);
   }
 
   void switchDisplay() {
@@ -149,6 +162,9 @@ class Display {
     startDisplayPerc = float(displayStart) / float(totalTime); //calculate percentages from ms data
     endDisplayPerc = float(displayStart + displayedMs) / float(totalTime);
     displayedPerc = float(displayedMs) / float(totalTime);
+    startDisplayPerc = startDisplayFilter.update(startDisplayPerc, 0.8);
+    endDisplayPerc = endDisplayFilter.update(endDisplayPerc, 0.8);
+    displayedPerc = displayLengthFilter.update(displayedPerc, 0.8);
 
     //println("displayStart is now " + displayStart + " displayedMs is now " + displayedMs + " totalTime = " + totalTime);
   }

@@ -2,7 +2,7 @@ class Spectrum {
   AudioSample sample;
   PrintWriter output;
   int fftSize;
-  float yScale = 0.2;
+  float yScale = 0.4;
   float pixelsPerChunk = 2;
   int displayX = width;
   int displayY = height;
@@ -24,6 +24,7 @@ class Spectrum {
   float contrast = 1.;
   int currentWindow = 0;
 
+
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
     totalTime = sample.length();
@@ -31,6 +32,7 @@ class Spectrum {
     calcSpectrum();
     // Create a new file in the sketch directory
     output = createWriter("fftData.h");
+
   }
 
   Spectrum(AudioSample _sample, int _fftSize, int displayX, int displayY) {
@@ -77,10 +79,15 @@ class Spectrum {
             //draw actual points
             strokeWeight(1);
             stroke(brightness, 255, brightness);
+            fill(brightness, 255, brightness);
             if (pixelsPerChunk < 2) {
               point(xPos, yPos);
             } else {
+              // line(xPos, yPos, pixelsPerChunk, 1)
               line(xPos, yPos, xPos + pixelsPerChunk, yPos);
+              rectMode(CORNERS);
+              //rect(xPos, yPos, xPos + pixelsPerChunk, nextYPos);
+              rectMode(CORNER);
             }
             colorMode(RGB);
             // line(xPos, yPos, xPos, nextYPos);
