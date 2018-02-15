@@ -7,3 +7,6 @@ application.windows64
 application.macosx
 build
 data
+desktop.ini
+fftData.txt
+fftData.h
