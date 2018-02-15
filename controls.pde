@@ -20,6 +20,10 @@ void keyPressed()
 
   }
 
+  if (keyCode == 10) {
+    display.writeFFT();
+  }
+
   if (keyCode == 17) {
     controlPressed = true;
     println("controlPressed = true");
@@ -36,15 +40,7 @@ void keyPressed()
     else if (key == 'h')  showHelp = !showHelp;
     else if (key == 'c')  display.centerDisplay();
 
-  //  case 'x': exit();
-
-
-
-
-
-
-
-
+  //  case 'x': exit()
 
   if (controlPressed) {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second
@@ -97,4 +93,8 @@ void keyReleased() {
 
 void checkButtons() { //this runs every loop and looks for action to be repeated when a key is held
 
+}
+
+void mousePressed() {
+  zoomYMouseInit = mouseY;
 }

@@ -36,7 +36,7 @@ class Display {
 
     println("Total time in display = " + totalTime);
 
-    spec = new Spectrum(sample, 2048, displayX, displayY);
+    spec = new Spectrum(sample, 4096, displayX, displayY);
     wave = new Waveform(sample, displayX, displayY);
   }
 
@@ -216,6 +216,9 @@ class Display {
     }
   }
 
+  void incrementYScale(float increment) {
+    spec.incrementYScale(increment);
+  }
   void setGain(float _gain) {
     println("setting gain to: " + _gain);
     spec.setGain(_gain);
@@ -253,5 +256,9 @@ class Display {
     println("zooming out");
     setPercPos(startPerc, endPerc);
     centerDisplay();
+  }
+
+  void writeFFT() {
+    spec.writeFFTToFile();
   }
 }

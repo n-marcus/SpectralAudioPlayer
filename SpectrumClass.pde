@@ -1,5 +1,6 @@
 class Spectrum {
   AudioSample sample;
+  PrintWriter output;
   int fftSize;
   float yScale = 0.2;
   float pixelsPerChunk = 2;
@@ -21,12 +22,15 @@ class Spectrum {
   float[] yPosArray;
   float gain = 1.;
   float contrast = 1.;
+  int currentWindow = 0;
 
   Spectrum(AudioSample _sample, int _fftSize) {
     sample = _sample;
     totalTime = sample.length();
     fftSize = _fftSize;
     calcSpectrum();
+    // Create a new file in the sketch directory
+    output = createWriter("fftData.h");
   }
 
   Spectrum(AudioSample _sample, int _fftSize, int displayX, int displayY) {
@@ -36,6 +40,7 @@ class Spectrum {
     calcSpectrum();
     this.displayX = displayX;
     this.displayY = displayY - barHeight; //we dont draw over the selection bar
+    output = createWriter("fftData.txt");
   }
 
   void drawSpectrum() {
@@ -44,7 +49,12 @@ class Spectrum {
 
     if (pixelsPerChunk < 0.9) {
 
-       skipEvery = int(1./(pixelsPerChunk + 0.1));
+         // this makes sure not every single fft drame is drawn
+         //this way the framerate is more stable even when zoomed out in a big file
+       skipEvery = ceil(1./((pixelsPerChunk / 5.) + 0.1));
+       // fill(255);
+       // textSize(12);
+       // text("skipevery = " + skipEvery + " and pixelsPerChunk = " + pixelsPerChunk, 100, 100);
        // skipEvery = constrain(skipEvery, 1, 1000);
        // println("pixels per chunk = " + pixelsPerChunk + "skip every " + skipEvery);
     }
@@ -63,14 +73,16 @@ class Spectrum {
             float brightness = map(spectra[i][j] * gain, 0.0, 35., 0., 300.);
             brightness = contrast * (brightness - 128) + 128;
 
+            colorMode(HSB);
             //draw actual points
             strokeWeight(1);
-            stroke(brightness);
+            stroke(brightness, 255, brightness);
             if (pixelsPerChunk < 2) {
               point(xPos, yPos);
             } else {
               line(xPos, yPos, xPos + pixelsPerChunk, yPos);
             }
+            colorMode(RGB);
             // line(xPos, yPos, xPos, nextYPos);
         }
       }
@@ -218,6 +230,11 @@ class Spectrum {
         return yPos;
       }
 
+      void incrementYScale(float increment) {
+        this.setYScale(this.yScale + increment);
+        println("Incremented yScale with " + increment + " to " + this.yScale);
+      }
+
       void setYScale(float _YScale) {
         this.yScale = _YScale;
         println("Set yScale to: " + this.yScale);
@@ -271,5 +288,28 @@ class Spectrum {
 
       void setGain(float _gain) {
         this.gain = _gain;
+      }
+
+      void writeFFTToFile() {
+        output.println("<fftData>");
+        output.println("<sampleRate=" + int(sample.sampleRate()) + ">");
+        output.println(" <fftSize=" + fftSize + ">");
+        for (int window = 0; window  < spectra.length; window  ++) {
+          //println("Writing data for window " + window);
+          output.println("  <window=" + window + ">");
+          output.print("   ");
+          for (int freq = 0; freq < spectra[0].length; freq ++) {
+            //println("Writing freq " + freq);
+            output.print(spectra[window][freq] + ", ");
+          }
+          output.println("");
+          output.println("  </window>");
+          println(int(float(window) / float(spectra.length) * 100.) + "% of writing file");
+        }
+        output.println("</fftData>");
+        output.flush();
+        output.close();
+        println("I think it worked!");
+
       }
     }

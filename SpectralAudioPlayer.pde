@@ -34,6 +34,8 @@ boolean makingWaveForm = false;
 boolean spectrumMode = false;
 
 IntList draggedLoopPoints;
+int zoomYMouseInit;
+float lastZoomYIncrement;
 float[][] spectra;
 
 String fileName;
@@ -63,6 +65,8 @@ String[] helpStrings = {
   "Press 'h' to hide this information"
 };
 
+
+
 void setup() {
   selectInput("Select a file to process:", "fileSelected");
   // loadNewFile("C:/Users/Nathan/Music/SoundsSamplesandSnippets/Boutiq 1/zingende kids afrika.wav");
@@ -83,10 +87,11 @@ void draw() {
   background(20);
   checkWindowResized();
   // smooth();
-  textSize(42);
   fill(175);
   textAlign(CENTER);
-  text(frameRate + "fps", 10, 10);
+  //textSize(12);
+  //text(frameRate + "fps", 10, 10);
+  textSize(42);
 
 
   if (errorOccured) {
@@ -126,7 +131,17 @@ void draw() {
         display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
         display.followPlayhead = false;
       }
-      if (mousePressed && keyPressed && keyCode == 16) display.setYScale((float(height - mouseY) * 2. )/ float(height));
+      if (mousePressed && keyPressed && keyCode == 16) {
+      //   float yScaleChange = (zoomYMouseInit - height) / float(height);
+      //   if (lastZoomYIncrement != yScaleChange) {
+      //   println("Scale change = " + yScaleChange / 10.);
+      //   display.incrementYScale(yScaleChange / 10.);
+      // }
+      //
+      //   lastZoomYIncrement = yScaleChange;
+        // display.setYScale()
+        display.setYScale((float(height - (mouseY - zoomYMouseInit)) * 1. )/ float(height));
+      }
        // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
 
       pushMatrix(); //make a different coordinate system
