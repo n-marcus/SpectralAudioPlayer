@@ -23,6 +23,7 @@ class Display {
   boolean mouseOver = false;
   boolean showInfo = false;
 
+
   boolean followPlayhead = false;
   int followPlayheadOffset = 0;
 

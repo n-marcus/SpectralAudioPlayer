@@ -41,6 +41,10 @@ void keyPressed()
     else if (key == 'c')  display.centerDisplay();
 
   //  case 'x': exit()
+  if (keyCode == 67) {
+    showColor = !showColor;
+    println("Color is now: " + showColor);
+  }
 
   if (controlPressed) {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second

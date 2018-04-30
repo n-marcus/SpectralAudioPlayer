@@ -45,23 +45,24 @@ boolean controlPressed = false;
 boolean shiftPressed = false;
 boolean loadingFile = false;
 boolean showHelp = false;
+boolean showColor = true;
 
 FadingText helpText;
 FadingText loadingTimeText;
 
 String[] helpStrings = {
-  "Press space to pause / play loaded audio file",
-  "Click anywhere in the spectrum to move to that location within the file",
-  "Hold cntrl and press + or - to zoom in or out",
-  "Or hold cntrl and drag the mouse to zoom in or out",
-  "Press the right or left arrow key to move 5 seconds forward or backwards (hold cntrl for 1 second intervals)",
-  "Hold cntrl and shift and press + or - to adjust the overall gain of the spectogram",
-  "-----------",
-  "Press 'n' to load a new audio file",
-  "Press 'x' to exit the program",
-  "Press 'c' to center the view around the current playing position in the file",
-  "Press 'i' to show details on the spectogram",
-  "Press 'f' to follow the positon in the file",
+  "Press space to pause / play loaded audio file", 
+  "Click anywhere in the spectrum to move to that location within the file", 
+  "Hold cntrl and press + or - to zoom in or out", 
+  "Or hold cntrl and drag the mouse to zoom in or out", 
+  "Press the right or left arrow key to move 5 seconds forward or backwards (hold cntrl for 1 second intervals)", 
+  "Hold cntrl and shift and press + or - to adjust the overall gain of the spectogram", 
+  "-----------", 
+  "Press 'n' to load a new audio file", 
+  "Press 'x' to exit the program", 
+  "Press 'c' to center the view around the current playing position in the file", 
+  "Press 'i' to show details on the spectogram", 
+  "Press 'f' to follow the positon in the file", 
   "Press 'h' to hide this information"
 };
 
@@ -78,9 +79,7 @@ void setup() {
   minim = new Minim(this);
   surface.setResizable(true);
 
-  helpText = new FadingText(50 ,50 , 30000, "Press 'h' to for shortcuts and explanations");
-
-
+  helpText = new FadingText(50, 50, 30000, "Press 'h' to for shortcuts and explanations");
 }
 
 void draw() {
@@ -97,7 +96,7 @@ void draw() {
   if (errorOccured) {
     textSize(42);
     fill(175);
-    text("An error occured :( ", width / 2 , height / 2);
+    text("An error occured :( ", width / 2, height / 2);
     textSize(20);
     text("Try loading a new sound by pressing 'n'", width / 2, height / 2 + 50);
     text("Make sure your audio file is either .wav .mp3 or .aiff and either 8 or 16 bit", width / 2, height / 2 + 100);
@@ -115,23 +114,23 @@ void draw() {
 
 
 
-      // if (keyPressed && keyCode == 61 && controlPressed) display.setGain(display.getGain() + 0.2);
-      // if (keyPressed && )
+    // if (keyPressed && keyCode == 61 && controlPressed) display.setGain(display.getGain() + 0.2);
+    // if (keyPressed && )
 
 
-      fft.forward(player.mix);
-      display.update();
+    fft.forward(player.mix);
+    display.update();
 
-      // showGrid();
-      // showPlayhead();
-      display.drawPlayhead(player.position());
-      display.drawInfo();
-      // checkLoop(); //make sure player follows loop points
-      if (mousePressed && keyPressed && keyCode == 17) {
-        display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
-        display.followPlayhead = false;
-      }
-      if (mousePressed && keyPressed && keyCode == 16) {
+    // showGrid();
+    // showPlayhead();
+    display.drawPlayhead(player.position());
+    display.drawInfo();
+    // checkLoop(); //make sure player follows loop points
+    if (mousePressed && keyPressed && keyCode == 17) {
+      display.setPercPos(float(mouseX) / float(width), 1. - float(mouseY) / float(height)) ; //zoom by holding cntrl and clicking and dragging
+      display.followPlayhead = false;
+    }
+    if (mousePressed && keyPressed && keyCode == 16) {
       //   float yScaleChange = (zoomYMouseInit - height) / float(height);
       //   if (lastZoomYIncrement != yScaleChange) {
       //   println("Scale change = " + yScaleChange / 10.);
@@ -139,33 +138,33 @@ void draw() {
       // }
       //
       //   lastZoomYIncrement = yScaleChange;
-        // display.setYScale()
-        display.setYScale((float(height - (mouseY - zoomYMouseInit)) * 1. )/ float(height));
-      }
-       // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
-
-      pushMatrix(); //make a different coordinate system
-      translate(0, waveformHeight - 5); //move down to make a second window
-      if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
-      drawSpectrumAxis();
-      popMatrix(); //back to normal coordinate system
+      // display.setYScale()
+      display.setYScale((float(height - (mouseY - zoomYMouseInit)) * 1. )/ float(height));
     }
+    // if (madeLoop) showLoop(); //if a loop has been made and is active, show it;
 
-
-    textAlign(CORNER);
-    textSize(8);
-    text(nfc(frameRate, 2) + "fps",20,waveformHeight + 20);
-
-
-
-    if (helpText.alive) helpText.update();
-    if (loadingTimeText != null && loadingTimeText.alive) loadingTimeText.update();
-
-    if (showHelp) showHelp();
-    fill(150);
-    textSize(10);
-    if (player != null) text(player.position() / 1000., 40,  waveformHeight + 40);
+    pushMatrix(); //make a different coordinate system
+    translate(0, waveformHeight - 5); //move down to make a second window
+    if (player.isPlaying()) drawSpectrum(); //drawRealTime spectrum
+    drawSpectrumAxis();
+    popMatrix(); //back to normal coordinate system
   }
+
+
+  textAlign(CORNER);
+  textSize(8);
+  text(nfc(frameRate, 2) + "fps", 20, waveformHeight + 20);
+
+
+
+  if (helpText.alive) helpText.update();
+  if (loadingTimeText != null && loadingTimeText.alive) loadingTimeText.update();
+
+  if (showHelp) showHelp();
+  fill(150);
+  textSize(10);
+  if (player != null) text(player.position() / 1000., 40, waveformHeight + 40);
+}
 
 
 int xPos2Time(int xPos) { //this function translates a point in x space to the time in the sample within the player object
@@ -191,7 +190,7 @@ void showHelp() {
   int textInterval = 20;
   stroke(0);
   strokeWeight(1);
-  fill(0,200);
+  fill(0, 200);
   rectMode(CORNER);
   rect(width / 10, textBase - textInterval, width * 0.8, (helpStrings.length + 1) * textInterval);
   fill(200);
