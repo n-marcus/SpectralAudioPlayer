@@ -80,14 +80,11 @@ class Spectrum {
             strokeWeight(1);
             stroke(brightness, 255, brightness);
             fill(brightness, 255, brightness);
-            if (pixelsPerChunk < 2) {
+            if (pixelsPerChunk < 2.5) {
               point(xPos, yPos);
             } else {
               // line(xPos, yPos, pixelsPerChunk, 1)
               line(xPos, yPos, xPos + pixelsPerChunk, yPos);
-              rectMode(CORNERS);
-              //rect(xPos, yPos, xPos + pixelsPerChunk, nextYPos);
-              rectMode(CORNER);
             }
             colorMode(RGB);
             // line(xPos, yPos, xPos, nextYPos);

@@ -162,9 +162,9 @@ class Display {
     startDisplayPerc = float(displayStart) / float(totalTime); //calculate percentages from ms data
     endDisplayPerc = float(displayStart + displayedMs) / float(totalTime);
     displayedPerc = float(displayedMs) / float(totalTime);
-    startDisplayPerc = startDisplayFilter.update(startDisplayPerc, 0.8);
-    endDisplayPerc = endDisplayFilter.update(endDisplayPerc, 0.8);
-    displayedPerc = displayLengthFilter.update(displayedPerc, 0.8);
+    //startDisplayPerc = startDisplayFilter.update(startDisplayPerc, 0.8);
+    //endDisplayPerc = endDisplayFilter.update(endDisplayPerc, 0.8);
+    //displayedPerc = displayLengthFilter.update(displayedPerc, 0.8);
 
     //println("displayStart is now " + displayStart + " displayedMs is now " + displayedMs + " totalTime = " + totalTime);
   }
