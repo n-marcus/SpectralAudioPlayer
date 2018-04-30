@@ -3,4 +3,4 @@ This sketch is a rough version of what I dream would one day become a fully func
 
 For now it features a spectogram with variable contrast, zooming capabilities.
 
-![alt tag](https://i.imgur.com/usZZzYu.jpg)
+![alt tag](https://imgur.com/wYmtxeX)
