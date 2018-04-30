@@ -3,4 +3,8 @@ This sketch is a rough version of what I dream would one day become a fully func
 
 For now it features a spectogram with variable contrast, zooming capabilities.
 
-![alt tag](https://i.imgur.com/wYmtxeX.mp4)
+
+![alt tag](https://github.com/n-marcus/SpectralAudioPlayer/blob/master/SpectralAudioGIF1.gif)
+
+# Changing contrast
+![alt tag](https://github.com/n-marcus/SpectralAudioPlayer/blob/master/SpectralAudioGIF2.gif)
