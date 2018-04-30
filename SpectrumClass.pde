@@ -23,6 +23,7 @@ class Spectrum {
   float gain = 1.;
   float contrast = 1.;
   int currentWindow = 0;
+  boolean showColor = true;
 
 
   Spectrum(AudioSample _sample, int _fftSize) {

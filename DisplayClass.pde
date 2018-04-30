@@ -258,6 +258,10 @@ class Display {
         followPlayheadOffset = int(halfDisplayedPerc * float(totalTime));
       }
   }
+  
+  void switchColor() {
+     spec.showColor = !spec.showColor; 
+  }
 
   void zoomIn(float perc) {
     float startPerc =(float(positionInFile) / float(totalTime)) - perc;

@@ -45,7 +45,8 @@ boolean controlPressed = false;
 boolean shiftPressed = false;
 boolean loadingFile = false;
 boolean showHelp = false;
-boolean showColor = true;
+boolean muted = false;
+
 
 FadingText helpText;
 FadingText loadingTimeText;

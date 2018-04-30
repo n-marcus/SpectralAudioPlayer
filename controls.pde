@@ -3,48 +3,49 @@ void keyPressed()
 {
   println("keyCode " + keyCode);
   switch (keyCode) { //handle keyCode presses
-    case 9: //tab key
-      display.switchDisplay();
-    case 32: //space
-      if (player.isPlaying()) player.pause();
-      else if (!madeLoop) player.play();
-      else if (madeLoop) {
-        player.cue(loopIn);
-        player.play();
-      }
-      if (player.position() >= player.length()) {
-        player.rewind();
-        player.play();
-      }
-
-
+  case 9: //tab key
+    display.switchDisplay(); //this really doesnt work now...
+  case 32: //space
+    if (player.isPlaying()) player.pause();
+    else if (!madeLoop) player.play();
+    else if (madeLoop) {
+      player.cue(loopIn);
+      player.play();
+    }
+    if (player.position() >= player.length()) {
+      player.rewind();
+      player.play();
+    }
+  }
+  if (keyCode == 77) {
+    muted = !muted;
+    if (muted) player.mute();
+    else player.unmute();
   }
 
   if (keyCode == 10) {
     display.writeFFT();
   }
 
+
+
   if (keyCode == 17) {
     controlPressed = true;
     println("controlPressed = true");
-  }
-  else if (keyCode == 16) {
+  } else if (keyCode == 16) {
     shiftPressed = true;
     println("shiftPressed = true");
   }
 
-    if (key == 'l') madeLoop =! madeLoop;
-    else if (key == 'n') selectNewFile();
-    else if (key == 'f')  display.switchFollowPlayhead();
-    else if (key == 'i')  display.showInfo = !display.showInfo;
-    else if (key == 'h')  showHelp = !showHelp;
-    else if (key == 'c')  display.centerDisplay();
+  if (key == 'l') madeLoop =! madeLoop;
+  else if (key == 'n') selectNewFile();
+  else if (key == 'f')  display.switchFollowPlayhead();
+  else if (key == 'i')  display.showInfo = !display.showInfo;
+  else if (key == 'h')  showHelp = !showHelp;
+  else if (key == 'c')  display.centerDisplay();
 
   //  case 'x': exit()
-  if (keyCode == 67) {
-    showColor = !showColor;
-    println("Color is now: " + showColor);
-  }
+
 
   if (controlPressed) {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 1000); //skip forward one second
@@ -58,6 +59,8 @@ void keyPressed()
     if (shiftPressed && keyCode == 61) display.zoomIn(0.01);
     if (!shiftPressed && keyCode == 45) display.zoomOut(0.1);
     if (shiftPressed && keyCode == 45) display.zoomOut(0.01);
+
+    if (keyCode == 67) display.switchColor();
   } else {
     if (keyPressed && keyCode == 39) player.cue(player.position() + 5000); //skip forward five seconds
     if (keyPressed && keyCode == 37) player.cue(player.position() - 5000);
@@ -91,12 +94,10 @@ void keyReleased() {
   if (keyCode == 16) {
     shiftPressed = false;
     println("shiftPressed = false");
-
   }
 }
 
 void checkButtons() { //this runs every loop and looks for action to be repeated when a key is held
-
 }
 
 void mousePressed() {
